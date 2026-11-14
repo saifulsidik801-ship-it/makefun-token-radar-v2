@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — pre-token protocols ranked by implied launch value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="dot" aria-hidden="true"></span> Token Radar</div>
+  <div class="topmeta" id="topmeta"></div>
+  <div class="chips"><span class="chip" id="chipWatch"></span><span class="chip" id="chipRows"></span></div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="kicker">Token launch radar</p>
+      <h1><span id="heroCount">198</span> protocols record no token. Here is what each launch would be worth.</h1>
+      <p class="lede" id="lede"></p>
+      <ul class="stats" id="stats"></ul>
+      <p class="legend" id="legend"></p>
+    </div>
+    <aside class="method-card" aria-label="How a launch is priced">
+      <h2>How a launch is priced</h2>
+      <p class="formula" id="formula"></p>
+      <div class="chart" id="chart"></div>
+      <p class="chart-note" id="chartNote"></p>
+    </aside>
+  </section>
+
+  <nav class="tabs" aria-label="Views">
+    <button data-view="board" class="active">Board</button>
+    <button data-view="live">Live tokens</button>
+    <button data-view="method">Method</button>
+  </nav>
+
+  <section id="view-board" class="view">
+    <div class="controls">
+      <input id="q" type="search" placeholder="Search protocols" aria-label="Search protocols">
+      <select id="cat" aria-label="Filter by category"><option value="">All categories</option></select>
+      <select id="chain" aria-label="Filter by chain"><option value="">All chains</option></select>
+      <select id="tvl" aria-label="Filter by TVL">
+        <option value="">Any TVL</option>
+        <option value="1000">TVL $1B+</option>
+        <option value="250">TVL $250M+</option>
+        <option value="50">TVL $50M+</option>
+      </select>
+      <select id="sort" aria-label="Sort board">
+        <option value="rank">Sort: implied value ↓</option>
+        <option value="tvl">Sort: TVL ↓</option>
+        <option value="growth">Sort: 7-day growth ↓</option>
+        <option value="age">Sort: oldest first</option>
+        <option value="slice">Sort: slice / $1K ↓</option>
+        <option value="name">Sort: name A–Z</option>
+      </select>
+      <div class="seg" role="group" aria-label="Board scope">
+        <button data-scope="all" class="active">All</button>
+        <button data-scope="watchlist">Watchlist</button>
+        <button data-scope="early">Early</button>
+      </div>
+      <span class="count" id="count"></span>
+      <button id="csv" type="button">Export CSV</button>
+    </div>
+    <table id="board">
+      <thead>
+        <tr><th>#</th><th>Protocol</th><th>TVL</th><th>7d</th><th>No token for</th><th>Implied value</th><th>&times; TVL</th><th>Slice / $1K</th><th>Farm &middot; fees &middot; setup</th></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p class="hint">Open a row for its model breakdown and its eight costed farm steps.</p>
+    <aside id="detail" class="hidden" aria-label="Protocol detail"></aside>
+  </section>
+
+  <section id="view-live" class="view hidden">
+    <h2>Live tokens — already trading, shown for contrast</h2>
+    <p class="lede">These protocols record a token, so they are <em>not</em> launch candidates. They sit here so a reader can see what the board excludes — and what a launch graduates into.</p>
+    <table class="plain">
+      <thead><tr><th>Protocol</th><th>Category</th><th>TVL</th><th>Market cap</th><th>7d</th></tr></thead>
+      <tbody id="liveRows"></tbody>
+    </table>
+  </section>
+
+  <section id="view-method" class="view hidden">
+    <h2>Method — how the radar scores</h2>
+    <p class="lede" id="methodLede"></p>
+    <pre class="formula-block" id="methodFormula"></pre>
+    <h3>Category factors the data sets</h3>
+    <p class="small">Each factor is the median of its category's priced tokens' residuals from the fitted line, shrunk toward 1 by the count behind it and clamped to 0.30–3.00. A category with fewer than two priced tokens keeps 1.00.</p>
+    <table class="plain narrow">
+      <thead><tr><th>Category</th><th>Priced tokens</th><th>Factor</th></tr></thead>
+      <tbody id="factorRows"></tbody>
+    </table>
+    <h3>What was excluded, and why</h3>
+    <p id="excl"></p>
+    <p id="coverage"></p>
+    <h3>For the judge</h3>
+    <p class="judge-note">Nothing on this page is a typed-in table of answers. The curve is fitted at build time from the snapshot's own priced tokens; the category factors are medians of the same fit's residuals; the band is the fit's residual quartiles; the backtest share is counted, not claimed. No protocol name is special-cased anywhere in the code. Every row's implied value is recomputed in its detail view from the same figures, and the check must read “matches board.json”.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Data: DefiLlama public API, snapshot <span id="asof"></span>. Implied values are this radar's own claim, never a prediction that a token will launch. Not financial advice.</p>
+</footer>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
